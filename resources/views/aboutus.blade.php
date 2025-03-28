@@ -112,7 +112,10 @@
                         <div class="col-12">
                             <div class="text-center mx-auto" style="max-width: 700px;">
                                 <h1 class="text-primary">Get in touch</h1>
-                                <p class="mb-4">The contact form is currently inactive. Get a functional and working contact form with Ajax & PHP in a few minutes. Just copy and paste the files, add a little code and you're done. <a href="https://htmlcodex.com/contact-form">Download Now</a>.</p>
+                                <p class="mb-4">NesaFood adalah platform digital yang dirancang untuk mempermudah akses ke berbagai pilihan kuliner di foodcourt Universitas Negeri Surabaya (UNESA). Dengan NesaFood, mahasiswa, dosen, dan pengunjung dapat dengan mudah menemukan, memesan, dan menikmati makanan favorit mereka tanpa perlu antre panjang.
+                                    Kami hadir untuk memberikan pengalaman kuliner yang lebih praktis, cepat, dan efisien. Melalui fitur pencarian menu, pemesanan online, dan informasi lengkap mengenai setiap tenant, NesaFood menjadi solusi modern bagi siapa saja yang ingin menikmati makanan di lingkungan kampus dengan lebih nyaman.
+                                    Bergabunglah dengan NesaFood dan nikmati kemudahan dalam menjelajahi cita rasa terbaik di UNESA!.</p>
+                                    <a href="https://htmlcodex.com/contact-form">Download Now</a>
                             </div>
                         </div>
                         <!-- <div class="col-lg-12">

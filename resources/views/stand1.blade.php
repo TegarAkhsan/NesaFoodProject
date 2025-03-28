@@ -105,7 +105,7 @@
 
     <!-- Single Page Header start -->
     <div class="container-fluid page-header py-5">
-        <h1 class="text-center text-white display-6">Stand 1</h1>
+        <h1 class="text-center text-white display-6">Stand 1 - Mak Limat Biadab</h1>
         <ol class="breadcrumb justify-content-center mb-0">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
             <li class="breadcrumb-item"><a href="#">Pages</a></li>
@@ -121,9 +121,8 @@
                 <div class="col-lg-8 col-xl-9">
                     <div id="standDetail">
                         <div class="text-center mb-5">
-                            <img src="{{ asset('img/stand1.jpg') }}" class="img-fluid rounded" alt="Stand 1">
-                            <h4 class="fw-bold mb-3">Stand 1</h4>
-                            <p class="mb-3">Deskripsi Stand 1</p>
+                            <h4 class="fw-bold mb-3">Stand 1 - Mak Limat Biadab</h4>
+                            <p class="mb-3">Stand 1 Muantep poll lee, Ubur-Ubur ikan lele, gwendeng lee</p>
                         </div>
                         <div class="tab-class text-center">
                             <ul class="nav nav-pills d-inline-flex text-center mb-5">
@@ -147,26 +146,142 @@
                                 <div id="tab-food" class="tab-pane fade show p-0 active">
                                     <div id="foodCarousel" class="carousel slide" data-bs-ride="carousel">
                                         <div class="carousel-inner">
-                                            <div class="carousel-item active">
-                                                <div class="row g-4">
-                                                    @for($i = 1; $i <= 5; $i++)
-                                                    <div class="col-md-6 col-lg-6 col-xl-4">
-                                                        <div class="rounded position-relative fruite-item">
-                                                            <div class="fruite-img">
-                                                                <img src="{{ asset('img/Ayam Geprek.jpg') }}" class="img-fluid w-100 rounded-top" alt="Food {{ $i }}">
-                                                            </div>
-                                                            <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Foods</div>
-                                                            <div class="p-4 border border-secondary border-top-0 rounded-bottom">
-                                                                <h4>Food {{ $i }}</h4>
-                                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
-                                                                <div class="d-flex justify-content-between flex-lg-wrap">
-                                                                    <p class="text-dark fs-5 fw-bold mb-0">Rp 10.000</p>
-                                                                </div>
-                                                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary mt-3"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                            <div class="row g-4 justify-content-center">
+                                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                                    <div class="rounded position-relative fruite-item">
+                                                        <div class="fruite-img">
+                                                            <img src="{{ asset('img/stand/Stand 5.jpg') }}" class="img-fluid w-100 rounded-top" alt="">
+                                                        </div>
+                                                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Foods</div>
+                                                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                            <h4>Ayam Teriyaki</h4>
+                                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                                                            <div class="d-flex justify-content-between flex-lg-wrap">
+                                                                <p class="text-dark fs-5 fw-bold mb-0">Rp 12.000</p>
+                                                                <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                                                <script>
+                                                                    $(document).ready(function() {
+                                                                        $(".add-to-cart").click(function() {
+                                                                            var menuId = $(this).data("id");
+                                                                            var menuName = $(this).data("name");
+                                                                            var menuPrice = $(this).data("price");
+
+                                                                            $.ajax({
+                                                                                url: "{{ route('cart.add') }}", // Rute ke controller untuk menambahkan ke cart
+                                                                                method: "POST",
+                                                                                data: {
+                                                                                    _token: "{{ csrf_token() }}",
+                                                                                    id: menuId,
+                                                                                    name: menuName,
+                                                                                    price: menuPrice
+                                                                                },
+                                                                                success: function(response) {
+                                                                                    alert("Item berhasil ditambahkan ke keranjang!");
+                                                                                    location.reload(); // Reload untuk update cart di index.blade.php
+                                                                                }
+                                                                            });
+                                                                        });
+                                                                    });
+                                                                </script> -->
+
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    @endfor
+                                                </div>
+                                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                                    <div class="rounded position-relative fruite-item">
+                                                        <div class="fruite-img">
+                                                            <img src="{{ asset('img/stand/Stand 4.jpg') }}" class="img-fluid w-100 rounded-top" alt="">
+                                                        </div>
+                                                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Foods</div>
+                                                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                            <h4>Gado-Gado</h4>
+                                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                                                            <div class="d-flex justify-content-between flex-lg-wrap">
+                                                                <p class="text-dark fs-5 fw-bold mb-0">Rp 10.000</p>
+                                                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary btn-add-to-cart" 
+                                                                data-id="1" 
+                                                                data-name="Gado-Gado" 
+                                                                data-price="10000" 
+                                                                data-image="{{ asset('img/stand/Stand 4.jpg') }}">
+                                                                <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                                    <div class="rounded position-relative fruite-item">
+                                                        <div class="fruite-img">
+                                                            <img src="{{ asset('img/stand/Stand 2.jpg') }}" class="img-fluid w-100 rounded-top" alt="">
+                                                        </div>
+                                                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Foods</div>
+                                                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                            <h4>Ayam Geprek</h4>
+                                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                                                            <div class="d-flex justify-content-between flex-lg-wrap">
+                                                                <p class="text-dark fs-5 fw-bold mb-0">Rp 10.000</p>
+                                                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary btn-add-to-cart" data-name="Ayam Geprek" data-price="10000" data-image="img/stand/Stand 2.jpg"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                                    <div class="rounded position-relative fruite-item">
+                                                        <div class="fruite-img">
+                                                            <img src="{{ asset('img/stand/Stand 6.jpg')}}" class="img-fluid w-100 rounded-top" alt="">
+                                                        </div>
+                                                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Foods</div>
+                                                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                            <h4>Nasi Uduk</h4>
+                                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                                                            <div class="d-flex justify-content-between flex-lg-wrap">
+                                                                <p class="text-dark fs-5 fw-bold mb-0">Rp 10.000</p>
+                                                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary btn-add-to-cart" data-name="Nasi Uduk" data-price="10000" data-image="img/stand/Stand 6.jpg"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                                    <div class="rounded position-relative fruite-item">
+                                                        <div class="fruite-img">
+                                                            <img src="{{ asset('img/stand/Stand 7.jpg')}}" class="img-fluid w-100 rounded-top" alt="">
+                                                        </div>
+                                                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Foods</div>
+                                                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                            <h4>Ayam Kecap</h4>
+                                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                                                            <div class="d-flex justify-content-between flex-lg-wrap">
+                                                                <p class="text-dark fs-5 fw-bold mb-0">Rp 10.000</p>
+                                                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary btn-add-to-cart" data-name="Ayam Kecap" data-price="10000" data-image="img/stand/Stand 7.jpg"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                                    <div class="rounded position-relative fruite-item">
+                                                        <div class="fruite-img">
+                                                            <img src="{{ asset('img/stand/Stand 8.jpg')}}" class="img-fluid w-100 rounded-top" alt="">
+                                                        </div>
+                                                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Foods</div>
+                                                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                            <h4>Ayam Bakar</h4>
+                                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                                                            <div class="d-flex justify-content-between flex-lg-wrap">
+                                                                <p class="text-dark fs-5 fw-bold mb-0">Rp 10.000</p>
+                                                                <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary btn-add-to-cart" data-name="Ayam Bakar" data-price="10000" data-image="img/stand/Stand 8.jpg"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="pagination d-flex justify-content-center mt-5">
+                                                        <a href="#" class="rounded">&laquo;</a>
+                                                        <a href="#" class="active rounded">1</a>
+                                                        <a href="#" class="rounded">2</a>
+                                                        <a href="#" class="rounded">3</a>
+                                                        <a href="#" class="rounded">&raquo;</a>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <!-- Add more carousel items for food as needed -->
@@ -262,35 +377,25 @@
                 <div class="col-lg-4 col-xl-3">
                     <div class="row g-4 fruite">
                         <div class="col-lg-12">
-                            <div class="input-group w-100 mx-auto d-flex mb-4">
-                                <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
-                                <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
-                            </div>
                             <div class="mb-4">
                                 <h4>Categories</h4>
                                 <ul class="list-unstyled fruite-categorie">
                                     <li>
                                         <div class="d-flex justify-content-between fruite-name">
                                             <a href="#"><i class="fas fa-apple-alt me-2"></i>Foods</a>
-                                            <span>(3)</span>
+                                            <span>(10)</span>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="d-flex justify-content-between fruite-name">
                                             <a href="#"><i class="fas fa-apple-alt me-2"></i>Drinks</a>
-                                            <span>(5)</span>
+                                            <span>(15)</span>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="d-flex justify-content-between fruite-name">
                                             <a href="#"><i class="fas fa-apple-alt me-2"></i>Snacks</a>
-                                            <span>(2)</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="d-flex justify-content-between fruite-name">
-                                            <a href="#"><i class="fas fa-apple-alt me-2"></i>Bread</a>
-                                            <span>(8)</span>
+                                            <span>(4)</span>
                                         </div>
                                     </li>
                                 </ul>
@@ -300,7 +405,7 @@
                             <h4 class="mb-4">Featured products</h4>
                             <div class="d-flex align-items-center justify-content-start">
                                 <div class="rounded" style="width: 100px; height: 100px;">
-                                    <img src="{{ asset('img/featur-1.jpg') }}" class="img-fluid rounded" alt="Image">
+                                    <img src="{{ asset('img/Ayam Teriyaki.jpg') }}" class="img-fluid rounded" alt="Image">
                                 </div>
                                 <div>
                                     <h6 class="mb-2">Ayam Teriyaki</h6>
@@ -486,13 +591,41 @@
     <script src="lib/isotope/isotope.pkgd.min.js"></script>
     <script src="lib/lightbox/js/lightbox.min.js"></script>
 
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   
+    <!-- Tambahkan jQuery untuk AJAX -->
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#spinner').removeClass('show');
+    $(document).ready(function () {
+        $(".btn-add-to-cart").click(function (e) {
+            e.preventDefault();
+
+            let menuId = $(this).data("id"); 
+            let menuName = $(this).data("name");
+            let menuPrice = $(this).data("price");
+            let menuImage = $(this).data("image");
+
+            $.ajax({
+                url: "{{ route('cart.add') }}",
+                method: "POST",
+                data: {
+                    menu_id: menuId,
+                    name: menuName,
+                    price: menuPrice,
+                    image: menuImage,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function (response) {
+                    alert(response.message);
+                    location.reload();
+                },
+                error: function () {
+                    alert("Gagal menambahkan ke cart");
+                }
+            });
         });
-    </script>
+    });
+    </script> -->
 </body>
 
 </html>

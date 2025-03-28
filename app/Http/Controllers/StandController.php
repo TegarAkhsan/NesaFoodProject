@@ -10,39 +10,49 @@ class StandController extends Controller
 {
     public function index()
     {
-        $stands = Stand::with('menus')->get();
+        // Gunakan pagination agar tidak berat
+        $stands = Stand::with('menus')->paginate(9);
         return view('index', compact('stands'));
     }
 
-    public function showStands()
-    {
-        $stands = Stand::paginate(9);
-        return view('stand', compact('stands'));
-    }
-
-    public function standDetail($id)
-    {
-        $stand = Stand::with(['menus' => function ($query) {
-            $query->orderBy('category');
-        }])->findOrFail($id);
-
-        $stands = Stand::all(); // Untuk dropdown
-
-        return view('standdetail', compact('stand', 'stands'));
-    }
+    // public function showStands()
+    // {
+    //     // Pagination untuk halaman stands
+    //     $stands = Stand::paginate(9);
+    //     return view('stand', compact('stands'));
+    // }
 
     public function show($id)
     {
         $stand = Stand::with('menus')->find($id);
-
+    
         if (!$stand) {
-            return response()->json(['error' => 'Stand not found'], 404);
+            abort(404); // Jika tidak ditemukan, tampilkan halaman 404
         }
-
-        $foods = $stand->menus->where('category', 'Food');
-        $drinks = $stand->menus->where('category', 'Drink');
-        $snacks = $stand->menus->where('category', 'Snack');
-
-        return view('standdetail', compact('stand', 'foods', 'drinks', 'snacks'));
+    
+        return view('standdetail', [
+            'stand' => $stand,
+            'foods' => $stand->menus
+        ]);
     }
+    
+
+    public function standDetail($id)
+    {
+        $stand = Stand::with('menus')->find($id);
+    
+        if (!$stand) {
+            abort(404, 'Stand not found');
+        }
+    
+        $foods = $stand->menus->where('type', 'makanan')->values(); // Reset keys
+        $drinks = $stand->menus->where('type', 'minuman')->values(); // Reset keys
+    
+        return view('standdetail', [
+            'stand' => $stand, 
+            'foods' => $foods, 
+            'drinks' => $drinks
+        ]);
+    }
+    
 }

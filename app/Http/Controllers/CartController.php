@@ -7,44 +7,59 @@ use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
-    public function showCart()
+    public function index()
     {
-        $cart = Session::get('cart', []);
-        return view('cart', compact('cart'));
+        $items = Session::get('cart', []); // Gunakan nama variabel yang sama dengan di view
+        return view('cart.index', compact('items'));
     }
+    
 
     public function addToCart(Request $request)
     {
         $cart = Session::get('cart', []);
-        $item = $request->only(['id', 'name', 'price']);
 
-        if (isset($cart[$item['id']])) {
-            $cart[$item['id']]['quantity']++;
+        // Cek apakah item sudah ada di keranjang
+        $itemIndex = array_search($request->id, array_column($cart, 'id'));
+        if ($itemIndex !== false) {
+            $cart[$itemIndex]['quantity'] += 1;
         } else {
-            $item['quantity'] = 1;
-            $cart[$item['id']] = $item;
+            $cart[] = [
+                'id' => $request->id,
+                'name' => $request->name,
+                'price' => $request->price,
+                'quantity' => 1
+            ];
         }
 
         Session::put('cart', $cart);
 
-        return back()->with('success', 'Item ditambahkan ke keranjang');
+        return response()->json([
+            'success' => true, 
+            'message' => 'Item berhasil ditambahkan ke keranjang!',
+            'cart' => $cart
+        ]);
     }
 
-    public function removeFromCart(Request $request)
+    public function removeFromCart($id)
     {
         $cart = Session::get('cart', []);
+        $cart = array_filter($cart, function ($item) use ($id) {
+            return $item['id'] != $id;
+        });
 
-        if (isset($cart[$request->id])) {
-            unset($cart[$request->id]);
-            Session::put('cart', $cart);
-        }
+        Session::put('cart', array_values($cart));
 
-        return back()->with('success', 'Item dihapus dari keranjang');
+        return response()->json(['success' => true, 'cart' => $cart]);
+    }
+
+    public function clearCart()
+    {
+        Session::forget('cart');
+        return response()->json(['success' => true]);
     }
 
     public function checkout()
     {
-        $cart = Session::get('cart', []);
-        return view('checkout', compact('cart'));
+        return view('checkout');
     }
 }
