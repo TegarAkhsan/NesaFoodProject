@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
         <meta charset="utf-8">
-        <title>NesaFood - Food Court UNESA</title>
+        <title>NesaFood - About Us</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
         <meta content="" name="keywords">
         <meta content="" name="description">
@@ -51,14 +50,27 @@
                         <div class="navbar-nav mx-auto">
                             <a href="{{ url('/') }}" class="nav-item nav-link">Home</a>
                             <a href="{{ url('/stand') }}" class="nav-item nav-link">Stand</a>
-                            <a href="{{ url('/standdetail') }}" class="nav-item nav-link">Stand Detail</a>
+
+                            <!-- Dropdown Stand Detail -->
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" id="standDetailDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Stand Detail
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="standDetailDropdown" style="max-height: 300px; overflow-y: auto;">
+                                    @for($i = 1; $i <= 20; $i++)
+                                        <a class="dropdown-item" href="{{ route('stand.show', $i) }}">Stand {{ $i }}</a>
+                                    @endfor
+                                </div>
+                            </div>
+
                             <a href="{{ url('/aboutus') }}" class="nav-item nav-link active">About Us</a>
-                        </div>
+                            </div>
+
                         <div class="d-flex m-3 me-0">
                             <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal">
                                 <i class="fas fa-search text-primary"></i>
                             </button>
-                            <a href="{{ url('/checkout') }}" class="position-relative me-4 my-auto">
+                            <a href="{{ url('/cart') }}" class="position-relative me-4 my-auto">
                                 <i class="fa fa-shopping-bag fa-2x"></i>
                                 <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
                             </a>

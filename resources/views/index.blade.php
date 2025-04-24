@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
         <meta charset="utf-8">
-        <title>NesaFood - Food Court UNESA</title>
+        <title>NesaFood - Home</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
         <meta content="" name="keywords">
         <meta content="" name="description">
@@ -59,7 +58,7 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="standDetailDropdown" style="max-height: 300px; overflow-y: auto;">
                                     @for($i = 1; $i <= 20; $i++)
-                                        <a class="dropdown-item" href="{{ url('/standdetail/' . $i) }}">Stand {{ $i }}</a>
+                                        <a class="dropdown-item" href="{{ route('stand.show', $i) }}">Stand {{ $i }}</a>
                                     @endfor
                                 </div>
                             </div>
