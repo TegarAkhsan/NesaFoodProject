@@ -8,13 +8,6 @@ use App\Models\Stand;
 use App\Models\Menu;
 
 // =============================
-// API: Mendapatkan semua Stand beserta menu
-// =============================
-Route::get('/stands', function () {
-    return Stand::with('menus')->get();
-});
-
-// =============================
 // Halaman Utama
 // =============================
 Route::get('/', [StandController::class, 'index'])->name('index');
