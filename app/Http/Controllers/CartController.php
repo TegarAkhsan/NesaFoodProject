@@ -8,12 +8,14 @@ use App\Models\Order; // Jika Anda ingin menyimpan pesanan ke database
 
 class CartController extends Controller
 {
+    // Menampilkan keranjang di Web
     public function index()
     {
         $items = Session::get('cart', []);
         return view('cart.index', compact('items'));
     }
 
+    // API: Menambah item ke dalam cart
     public function addToCart(Request $request)
     {
         $cart = Session::get('cart', []);
@@ -39,6 +41,7 @@ class CartController extends Controller
         ]);
     }
 
+    // API: Menghapus item dari cart
     public function removeFromCart($id)
     {
         $cart = Session::get('cart', []);
@@ -51,6 +54,7 @@ class CartController extends Controller
         return response()->json(['success' => true, 'cart' => $cart]);
     }
 
+    // API: Mengupdate jumlah item dalam cart
     public function updateCart(Request $request)
     {
         $cart = Session::get('cart', []);
@@ -69,6 +73,7 @@ class CartController extends Controller
         return response()->json(['success' => true, 'cart' => $cart]);
     }
 
+    // API: Menghapus semua item di cart
     public function clearCart()
     {
         Session::forget('cart');
