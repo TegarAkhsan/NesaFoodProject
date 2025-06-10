@@ -35,9 +35,26 @@ return [
     |
     */
 
+    // 'guards' => [
+    //     'web' => [
+    //         'driver' => 'session',
+    //         'provider' => 'users',
+    //     ],
+
+    //     'standowner' => [
+    //         'driver' => 'session',
+    //         'provider' => 'standowners',
+    //     ],
+    // ],
+
     'guards' => [
         'web' => [
             'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        'api' => [
+            'driver' => 'sanctum',
             'provider' => 'users',
         ],
 
@@ -45,8 +62,12 @@ return [
             'driver' => 'session',
             'provider' => 'standowners',
         ],
-    ],
 
+        'standowner_api' => [
+            'driver' => 'sanctum',
+            'provider' => 'standowners',
+        ],
+    ],
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -73,6 +94,11 @@ return [
         'standowners' => [
             'driver' => 'eloquent',
             'model' => App\Models\StandOwner::class,
+        ],
+
+        'api' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
         ],
     ],
 

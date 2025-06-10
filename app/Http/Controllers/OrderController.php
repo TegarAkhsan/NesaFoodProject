@@ -52,6 +52,12 @@ class OrderController extends Controller
         return view('order.show', compact('order', 'qrCode'));
     }
 
+    // API: Menampilkan detail order
+    public function apiShow($id)
+    {
+        $order = Order::findOrFail($id);
+        return response()->json($order);
+    }
 
     // Proses checkout: simpan order dan order_items
     public function processCheckout(Request $request)
@@ -131,5 +137,11 @@ class OrderController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', 'Terjadi kesalahan saat checkout: ' . $e->getMessage());
         }
+    }
+    
+    public function apiInvoice($invoice)
+    {
+        $order = Order::where('invoice', $invoice)->firstOrFail();
+        return response()->json($order);
     }
 }

@@ -24,6 +24,7 @@ class ContactController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Pesan Anda telah dikirim!');
+        return response()->json(['message' => 'Pesan berhasil dikirim']);
     }
 }
 

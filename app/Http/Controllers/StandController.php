@@ -18,23 +18,27 @@ class StandController extends Controller
     public function showStands()
     {
         $stands = Stand::paginate(6);
-
-        // dd(get_class($stands));
-        // Harus keluar: Illuminate\Pagination\LengthAwarePaginator
-
         return view('stand.stand', compact('stands'));
     }
 
-
-    // Menampilkan detail stand berdasarkan ID
+    // Menampilkan detail stand berdasarkan ID (view)
     public function show($id)
     {
         $stand = Stand::with('menus')->findOrFail($id);
-        
         $foods = $stand->menus->where('type', 'makanan')->values();
         $drinks = $stand->menus->where('type', 'minuman')->values();
 
-        // Disesuaikan dengan file view standdetail.blade.php
         return view('stand.standdetail', compact('stand', 'foods', 'drinks'));
+    }
+
+    // Menampilkan detail stand sebagai JSON (API)
+    public function apiShow($id)
+    {
+        $stand = Stand::with('menus')->findOrFail($id);
+        return response()->json([
+            'id' => $stand->id,
+            'name' => $stand->name,
+            'menus' => $stand->menus,
+        ]);
     }
 }

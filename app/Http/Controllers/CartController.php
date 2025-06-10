@@ -27,11 +27,12 @@ class CartController extends Controller
         }
         return $total;
     }
+    
+    // Menambah item ke dalam cart
     public function store(Request $request)
     {
         // Logika menambahkan item ke keranjang
         $menuId = $request->menu_id;
-        // Contoh tambah ke session atau database...
 
         return redirect()->back()->with('success', 'Menu berhasil ditambahkan ke keranjang!');
     }
@@ -58,7 +59,7 @@ class CartController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Item berhasil ditambahkan ke keranjang!',
-            'cart' => $cart
+            'data' => ['cart' => $cart]
         ]);
     }
 
@@ -72,7 +73,11 @@ class CartController extends Controller
 
         Session::put('cart', array_values($cart));
 
-        return response()->json(['success' => true, 'cart' => $cart]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Item berhasil dihapus dari keranjang!',
+            'data' => ['cart' => $cart]
+        ]);
     }
 
     // API: Mengupdate jumlah item dalam cart
@@ -91,16 +96,27 @@ class CartController extends Controller
         }
 
         Session::put('cart', $cart);
-        return response()->json(['success' => true, 'cart' => $cart]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Keranjang berhasil diperbarui!',
+            'data' => ['cart' => $cart]
+        ]);
     }
 
     // API: Menghapus semua item di cart
     public function clearCart()
     {
         Session::forget('cart');
-        return response()->json(['success' => true]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Keranjang berhasil dikosongkan!',
+            'data' => ['cart' => []]
+        ]);
     }
 
+    // API: Menyimpan catatan untuk checkout
     public function saveNote(Request $request)
     {
         $request->validate([
@@ -110,6 +126,26 @@ class CartController extends Controller
         session(['checkout_note' => $request->catatan]);
 
         return redirect()->route('cart.index')->with('success', 'Catatan berhasil disimpan.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Catatan berhasil disimpan.',
+            'data' => ['note' => $request->catatan]
+        ]);
+    }
+
+    public function apiSaveNote(Request $request)
+    {
+        $request->validate([
+            'catatan' => 'nullable|string|max:500'
+        ]);
+
+        session(['checkout_note' => $request->catatan]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Catatan berhasil disimpan.',
+            'data' => ['note' => $request->catatan]
+        ]);
     }
 
     // Menampilkan halaman checkout
@@ -130,7 +166,20 @@ class CartController extends Controller
         return view('cart.checkout', compact('items', 'total'));
     }
 
+    public function apiCheckout(Request $request)
+    {
+        $items = Session::get('cart', []);
+        $total = $this->calculateTotal();
 
+        return response()->json([
+            'success' => true,
+            'message' => 'Data checkout berhasil diambil.',
+            'data' => [
+                'items' => $items,
+                'total' => $total
+            ]
+        ]);
+    }
 
     // Memproses checkout
     public function processCheckout(Request $request)
@@ -166,4 +215,48 @@ class CartController extends Controller
         return redirect()->route('order.show', $order->id);
     }
 
+    #API Process Checkout
+    public function apiProcessCheckout(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'name' => 'required|string',
+            'address' => 'required|string',
+            'payment_method' => 'required|string',
+        ]);
+
+        $cart = Session::get('cart', []);
+        if (empty($cart)) {
+            return response()->json(['message' => 'Cart is empty'], 400);
+        }
+
+        $order = Order::create([
+            'invoice_code' => 'NSF-' . now()->format('His') . '-' . strtoupper(\Illuminate\Support\Str::random(5)),
+            'name' => $request->name,
+            'address' => $request->address,
+            'payment_method' => $request->payment_method,
+            'note' => $request->note,
+            'promo_code' => $request->promo_code,
+            'status' => 'pending',
+            'total' => $this->calculateTotal(),
+        ]);
+
+        foreach ($cart as $item) {
+            $order->orderItems()->create([
+                'menu_id' => $item['id'],
+                'name' => $item['name'],
+                'price' => $item['price'],
+                'quantity' => $item['quantity'],
+                'subtotal' => $item['price'] * $item['quantity'],
+            ]);
+        }
+
+        Session::forget('cart');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Checkout berhasil',
+            'data' => $order->load('orderItems')
+        ]);
+    }
 }

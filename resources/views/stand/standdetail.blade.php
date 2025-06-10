@@ -102,7 +102,7 @@
                                         <div class="row g-4">
                                             @foreach($foods as $food => $item)
                                                 <div class="col-lg-4 col-md-6">
-                                                    <div class="position-relative rounded-top overflow-hidden" style="height: 250px; overflow: hidden;">
+                                                    <div class="position-relative rounded-top overflow-hidden" style="height: 100px; overflow: hidden;">
                                                         @php
                                                             $image = 'Ayam Bakar.jpg';
                                                         @endphp
@@ -141,7 +141,7 @@
                                     <div class="row g-4">
                                         @foreach($drinks as $drink)
                                         <div class="col-md-6 col-lg-4 col-xl-3">
-                                            <div class="rounded position-relative fruite-item h-100">
+                                            <div class="rounded position-relative fruite-item h-50">
                                                 <div class="fruite-img">
                                                     <img src="{{ asset($drink->image) }}" class="img-fluid w-100 rounded-top" style="height: 200px; object-fit: cover;" alt="{{ $drink->name }}">
                                                 </div>

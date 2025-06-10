@@ -34,7 +34,7 @@ class AuthController extends Controller
             if (Auth::guard('standowner')->attempt($credentials)) {
                 Log::info('Password cocok, login StandOwner');
                 logger("Berhasil login sebagai StandOwner");
-                $request->session()->regenerate();
+                // $request->session()->regenerate();
                 return redirect()->route('standowner.dashboard');
             } else {
                 Log::warning('Gagal login manual StandOwner');
@@ -47,7 +47,7 @@ class AuthController extends Controller
         else {
             // Coba login sebagai pembeli biasa
             if (Auth::guard('web')->attempt($credentials)) {
-                $request->session()->regenerate();
+                // $request->session()->regenerate();
                 return redirect()->redirect()->route('/user/dashboard'); // atau redirect()->route('dashboard');
             } else {
                 return back()->withErrors([
