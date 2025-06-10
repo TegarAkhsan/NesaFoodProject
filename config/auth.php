@@ -48,23 +48,27 @@ return [
     // ],
 
     'guards' => [
+        // Web login untuk pembeli
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
 
+        // API JWT untuk pembeli
         'api' => [
-            'driver' => 'sanctum',
+            'driver' => 'jwt',
             'provider' => 'users',
         ],
 
+        // Web login untuk StandOwner
         'standowner' => [
             'driver' => 'session',
             'provider' => 'standowners',
         ],
 
+        // API JWT untuk StandOwner
         'standowner_api' => [
-            'driver' => 'sanctum',
+            'driver' => 'jwt',
             'provider' => 'standowners',
         ],
     ],
@@ -96,10 +100,10 @@ return [
             'model' => App\Models\StandOwner::class,
         ],
 
-        'api' => [
-            'driver' => 'sanctum',
-            'provider' => 'users',
-        ],
+        // 'api' => [
+        //     'driver' => 'sanctum',
+        //     'provider' => 'users',
+        // ],
     ],
 
     /*

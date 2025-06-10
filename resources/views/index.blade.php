@@ -380,7 +380,7 @@
     </script>
 
     <script>
-        const isLoggedIn = @json(Auth::check());
+        const isLoggedIn = JSON.parse('@json(Auth::check())');
 
         $(document).ready(function () {
             // Stand Detail Loader

@@ -13,7 +13,6 @@
         </div>
         <!-- Single Page Header End -->
 
-
         <!-- Contact Start -->
         <div class="container-fluid contact py-5">
             <div class="container py-5">
@@ -23,7 +22,8 @@
                             <div class="text-center mx-auto" style="max-width: 700px;">
                                 <h1 class="text-primary mb-3">Tentang NesaFood</h1>
                                 <p class="mb-4">
-                                    <strong>NesaFood</strong> adalah platform digital inovatif yang mempermudah civitas akademika UNESA dalam menikmati ragam kuliner kampus. Melalui fitur pencarian menu, pemesanan online, dan info tenant terkini, kami hadir untuk menjawab kebutuhan makan cepat, praktis, dan efisien tanpa harus antre.
+                                    <strong>NesaFood</strong> adalah platform digital inovatif yang mempermudah civitas akademika UNESA dalam menikmati ragam kuliner kampus. 
+                                    Melalui fitur pencarian menu, pemesanan online, dan info tenant terkini, kami hadir untuk menjawab kebutuhan makan cepat, praktis, dan efisien tanpa harus antre.
                                 </p>
                                 <p class="mb-4">
                                     Apakah kamu mahasiswa sibuk, dosen yang ingin serba cepat, atau pengunjung kampus? NesaFood hadir untukmu. Temukan makanan favoritmu hanya dalam beberapa klik!

@@ -13,10 +13,10 @@ Route::post('/login', [AuthApiController::class, 'login']);
 Route::post('/logout', [AuthApiController::class, 'logout'])->middleware('auth:sanctum');
 
 // STAND API
-Route::middleware('auth:sanctum')->get('/stand/{id}', [StandController::class, 'apiShow']);
+Route::middleware('auth:api')->get('/stand/{id}', [StandController::class, 'apiShow']);
 
 // CART API
-Route::middleware('auth:sanctum')->prefix('cart')->group(function () {
+Route::middleware('auth:api')->prefix('cart')->group(function () {
     Route::post('/add', [CartController::class, 'addToCart']);
     Route::post('/update', [CartController::class, 'updateCart']);
     Route::delete('/remove/{id}', [CartController::class, 'removeFromCart']);
