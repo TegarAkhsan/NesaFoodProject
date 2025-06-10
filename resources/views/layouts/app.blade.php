@@ -1,92 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet">
+        <meta charset="utf-8">
+        <title>NesaFood</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta content="" name="keywords">
+        <meta content="" name="description">
 
-    <!-- Icon Font Stylesheet -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+        <!-- Google Web Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet"> 
 
-    <!-- Libraries Stylesheet -->
-    <link href="{{ asset('lib/lightbox/css/lightbox.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+        <!-- Icon Font Stylesheet -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+        <!-- Libraries Stylesheet -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 
-    <!-- Template Stylesheet -->
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+        <!-- Customized Bootstrap Stylesheet -->
+        <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
 
-    <!-- Title dan Meta Tag yang dinamis -->
-    <title>@yield('title', 'NesaFood')</title>
-    @yield('head')
+        <!-- Template Stylesheet -->
+        <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+
+        <!-- AOS -->
+        <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
 </head>
 <body>
+    @include('layouts.navigation')
 
-    <!-- Spinner Start -->
-    <div id="spinner" class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-grow text-primary" role="status"></div>
-    </div>
-    <!-- Spinner End -->
-
-    <!-- Navbar Start -->
-    <div class="container-fluid fixed-top">
-        <div class="container px-0">
-            <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                <a href="{{ url('/') }}" class="navbar-brand">
-                    <h1 class="text-primary display-6">NesaFood</h1>
-                </a>
-                <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                    <span class="fa fa-bars text-primary"></span>
-                </button>
-                <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
-                    <div class="navbar-nav mx-auto">
-                        <a href="{{ url('/') }}" class="nav-item nav-link active">Home</a>
-                        <a href="{{ url('/stand') }}" class="nav-item nav-link">Stand</a>
-
-                        <!-- Dropdown Stand Detail -->
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" id="standDetailDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Stand Detail
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="standDetailDropdown" style="max-height: 300px; overflow-y: auto;">
-                                @for($i = 1; $i <= 20; $i++)
-                                    <a class="dropdown-item" href="{{ route('stand.show', $i) }}">Stand {{ $i }}</a>
-                                @endfor
-                            </div>
-                        </div>
-
-                        <a href="{{ url('/aboutus') }}" class="nav-item nav-link">About Us</a>
-                    </div>
-
-                    <div class="d-flex m-3 me-0">
-                        <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal">
-                            <i class="fas fa-search text-primary"></i>
-                        </button>
-                        <a href="{{ url('/cart') }}" class="position-relative me-4 my-auto">
-                            <i class="fa fa-shopping-bag fa-2x"></i>
-                            <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
-                        </a>
-                        <a href="{{ url('/profile') }}" class="my-auto">
-                            <i class="fas fa-user fa-2x"></i>
-                        </a>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </div>
-    <!-- Navbar End -->
-
-    <!-- Main Content -->
-    <main class="py-5">
+    <div>
         @yield('content')
-    </main>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @include('layouts.footer')
+
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="{{ asset('js/main.js') }}"></script>
+    <script>
+        let cart = [];
+
+        function addToCart(product) {
+            cart.push(product);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert('Product added to cart');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const cartIcon = document.querySelector('.fa-shopping-bag');
+            cartIcon.addEventListener('click', function() {
+                window.location.href = '{{ url("/cart") }}';
+            });
+
+            const addToCartButtons = document.querySelectorAll('.btn-add-to-cart');
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const product = {
+                        name: this.dataset.name,
+                        price: this.dataset.price,
+                        image: this.dataset.image
+                    };
+                    addToCart(product);
+                });
+            });
+        });
+    </script>
+
+    <script>
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
+        }
+
+        // Optional: klik di luar area dropdown akan menutup
+        document.addEventListener('click', function (event) {
+            const wrapper = document.getElementById('userDropdownWrapper');
+            const menu = document.getElementById('userDropdownMenu');
+            if (!wrapper.contains(event.target)) {
+                menu.style.display = 'none';
+            }
+        });
+    </script>
+
+
+    <!-- Script JS Bootstrap, FontAwesome, dll -->
 </body>
 </html>

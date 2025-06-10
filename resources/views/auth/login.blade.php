@@ -1,150 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>NesaFood - Home</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="" name="keywords">
-        <meta content="" name="description">
-
-        <!-- Google Web Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet"> 
-
-        <!-- Icon Font Stylesheet -->
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
-        <!-- Libraries Stylesheet -->
-        <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-        <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-
-
-        <!-- Customized Bootstrap Stylesheet -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-
-        <!-- Template Stylesheet -->
-        <link href="css/style.css" rel="stylesheet">
-    </head>
-
-    <body>
-
-        <!-- Spinner Start -->
-        <div id="spinner" class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
-            <div class="spinner-grow text-primary" role="status"></div>
+<x-guest-layout>
+    <div>
+        <div class="text-center mb-6">
+            <img src="{{ asset('img/NesaFood Logo.png') }}"class="h-16 mx-auto">
+            <h2 class="text-2xl font-bold text-green-700 mt-4">Selamat Datang di NesaFood</h2>
+            <p class="text-sm text-gray-500">Masuk untuk mulai memesan makanan favoritmu</p>
         </div>
-        <!-- Spinner End -->
 
-        <!-- Navbar Start -->
-        <div class="container-fluid fixed-top">
-            <div class="container px-0">
-                <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                    <a href="{{ url('/') }}" class="navbar-brand">
-                        <h1 class="text-primary display-6">NesaFood</h1>
+        <!-- Session Status -->
+        <x-auth-session-status class="mb-4" :status="session('status')" />
+
+        <form method="POST" action="{{ url('/auth/login') }}">
+            @csrf
+
+            <!-- Email -->
+            <div class="mb-4">
+                <x-input-label for="email" :value="__('Email')" />
+                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email"
+                              :value="old('email')" required autofocus autocomplete="username" />
+                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+                <x-input-label for="password" :value="__('Password')" />
+                <x-text-input id="password" class="block mt-1 w-full"
+                              type="password" name="password" required autocomplete="current-password" />
+                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            </div>
+
+            <!-- Remember Me -->
+            <div class="flex items-center justify-between mb-4">
+                <label for="remember_me" class="flex items-center">
+                    <input id="remember_me" type="checkbox"
+                           class="rounded border-gray-300 text-green-600 shadow-sm focus:ring-green-500"
+                           name="remember">
+                    <span class="ml-2 text-sm text-gray-600">Ingat saya</span>
+                </label>
+
+                @if (Route::has('password.request'))
+                    <a class="text-sm text-orange-600 hover:underline" href="{{ route('password.request') }}">
+                        Lupa password?
                     </a>
-                    <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                        <span class="fa fa-bars text-primary"></span>
-                    </button>
-                    <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
-                        <div class="navbar-nav mx-auto">
-                            <a href="{{ url('/') }}" class="nav-item nav-link active">Home</a>
-                            <a href="{{ url('/stand') }}" class="nav-item nav-link">Stand</a>
-
-                            <!-- Dropdown Stand Detail -->
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" id="standDetailDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Stand Detail
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="standDetailDropdown" style="max-height: 300px; overflow-y: auto;">
-                                    @for($i = 1; $i <= 20; $i++)
-                                        <a class="dropdown-item" href="{{ route('stand.show', $i) }}">Stand {{ $i }}</a>
-                                    @endfor
-                                </div>
-                            </div>
-
-                            <a href="{{ url('/aboutus') }}" class="nav-item nav-link">About Us</a>
-                            </div>
-
-                        <div class="d-flex m-3 me-0">
-                            <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal">
-                                <i class="fas fa-search text-primary"></i>
-                            </button>
-                            <a href="{{ url('/cart') }}" class="position-relative me-4 my-auto">
-                                <i class="fa fa-shopping-bag fa-2x"></i>
-                                <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
-                            </a>
-                            <a href="{{ url('/profile') }}" class="my-auto">
-                                <i class="fas fa-user fa-2x"></i>
-                            </a>
-                        </div>
-                    </div>
-                </nav>
+                @endif
             </div>
-        </div>
-        <!-- Navbar End -->
 
-        <!-- Login Start -->
-        <div class="container-fluid bg-light">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-5 col-md-6 col-sm-8 my-5 py-5">
-                        <div class="bg-white rounded shadow-sm p-4">
-                            <h3 class="text-center mb-4">Login</h3>
-                            <form action="{{ route('login') }}" method="POST">
-                                @csrf
-                                <div class="mb-3">
-                                    <label for="email" class="form-label">Email address</label>
-                                    <input type="email" class="form-control" id="email" name="email" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="password" class="form-label">Password</label>
-                                    <input type="password" class="form-control" id="password" name="password" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100">Login</button>
-                            </form>
-                            <p class="mt-3 text-center">Don't have an account? <a href="{{ route('register') }}">Register here</a></p>
-                        </div>
-                    </div>
-                </div>
+            <!-- Button -->
+            <div>
+                <button type="submit"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-200">
+                    Masuk
+                </button>
             </div>
-        </div>
-        <!-- Login End -->
-         
-<!-- JavaScript Libraries -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/lightbox/js/lightbox.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+        </form>
 
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('#standDropdown .dropdown-item').on('click', function(e) {
-                e.preventDefault();
-                var standId = $(this).data('stand-id');
-                loadStandDetail(standId);
-            });
-
-            function loadStandDetail(standId) {
-                $('#standDetail').html('<p>Loading details for Stand ' + standId + '...</p>');
-                $.ajax({
-                    url: '/standdetail/' + standId,
-                    method: 'GET',
-                    success: function(data) {
-                        $('#standDetail').html(data);
-                    },
-                    error: function() {
-                        $('#standDetail').html('<p>Error loading stand details.</p>');
-                    }
-                });
-            }
-        });
-    </script>
-    </body>
-
-</html>
+        <p class="mt-6 text-sm text-center text-gray-500">
+            Belum punya akun?
+            <a href="{{ route('register') }}" class="text-orange-600 hover:underline font-medium">Daftar sekarang</a>
+        </p>
+    </div>
+</x-guest-layout>

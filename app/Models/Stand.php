@@ -12,5 +12,11 @@ class Stand extends Model
     {
         return $this->hasMany(Menu::class, 'stand_id', 'id');
     }
+
+    // public function index()
+    // {
+    //     $stands = Stand::all();
+    //     return view('stand.index', compact('stands'));
+    // }
     
 }

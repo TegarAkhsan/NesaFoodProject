@@ -174,6 +174,45 @@
 #searchModal .modal-content {
     background: rgba(255, 255, 255, .8);
 }
+
+.user-dropdown {
+    display: inline-block;
+}
+
+.dropdown-list {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-top: 5px;
+    min-width: 150px;
+    z-index: 1000;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    padding: 0;
+}
+
+.dropdown-list li {
+    list-style: none;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdown-list li:last-child {
+    border-bottom: none;
+}
+
+.dropdown-list a {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+}
+
+.dropdown-list a:hover {
+    background-color: #f8f9fa;
+}
+
 /*** Navbar End ***/
 
 /*** Hero Header ***/

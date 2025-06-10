@@ -1,150 +1,143 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>NesaFood - Keranjang Belanja</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@extends('layouts.app')
+@section('title', 'Nesafood - Home')
+@section('content')
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Keranjang Belanja Modern -->
+    <div class="container py-5" style="margin-top: 80px;">
+        @if(count($items) > 0)
+            <form action="{{ route('cart.checkout') }}" method="POST">
+                @csrf
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body p-4">
+                        <h4 class="mb-4 fw-bold">Keranjang Belanja</h4>
 
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet"> 
+                        <!-- Tabel Item -->
+                        <div class="table-responsive mb-4">
+                            <table class="table align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Nama</th>
+                                        <th>Harga</th>
+                                        <th class="text-center">Jumlah</th>
+                                        <th>Total</th>
+                                        <th class="text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($items as $item)
+                                        <tr>
+                                            <td class="fw-medium">{{ $item['name'] }}</td>
+                                            <td>Rp {{ number_format($item['price'], 0, ',', '.') }}</td>
+                                            <td>
+                                                <div class="d-flex justify-content-center align-items-center gap-2">
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-circle btn-update" data-id="{{ $item['id'] }}" data-type="decrease">
+                                                        <i class="bi bi-dash"></i>
+                                                    </button>
+                                                    <span class="fw-semibold">{{ $item['quantity'] }}</span>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary rounded-circle btn-update" data-id="{{ $item['id'] }}" data-type="increase">
+                                                        <i class="bi bi-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td>Rp {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}</td>
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-sm btn-outline-danger rounded-3 btn-remove" data-id="{{ $item['id'] }}">
+                                                    <i class="bi bi-trash"></i> Hapus
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
 
-    <!-- Icon Font Stylesheet -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
-    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
-</head>
-<body>
-    <!-- Navbar Start -->
-    <div class="container-fluid fixed-top">
-        <div class="container px-0">
-            <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                <a href="{{ url('/') }}" class="navbar-brand">
-                    <h1 class="text-primary display-6">NesaFood</h1>
-                </a>
-                <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                    <span class="fa fa-bars text-primary"></span>
-                </button>
-                <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
-                    <div class="navbar-nav mx-auto">
-                        <a href="{{ url('/') }}" class="nav-item nav-link">Home</a>
-                        <a href="{{ url('/stand') }}" class="nav-item nav-link">Stand</a>
-
-                        <!-- Dropdown Stand Detail -->
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" id="standDetailDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Stand Detail
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="standDetailDropdown" style="max-height: 300px; overflow-y: auto;">
-                                @for($i = 1; $i <= 20; $i++)
-                                    <a class="dropdown-item" href="{{ route('stand.show', $i) }}">Stand {{ $i }}</a>
-                                @endfor
+                        <!-- Kode Promo -->
+                        <div class="mb-3">
+                            <label for="promo" class="form-label fw-medium">Kode Promo</label>
+                            <div class="input-group">
+                                <input type="text" name="promo" id="promo" class="form-control" placeholder="Masukkan kode promo jika ada">
+                                <button class="btn btn-outline-primary" type="button">Terapkan</button>
                             </div>
                         </div>
 
-                        <a href="{{ url('/aboutus') }}" class="nav-item nav-link">About Us</a>
-                    </div>
+                        <!-- Input Catatan -->
+                        <div class="mb-4">
+                            <label for="catatan" class="form-label fw-medium">Catatan Tambahan</label>
+                            <textarea name="catatan" id="catatan" class="form-control" rows="3" placeholder="Masukkan catatan jika ada">{{ session('checkout_note') }}</textarea>
+                        </div>
 
-                    <div class="d-flex m-3 me-0">
-                        <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal">
-                            <i class="fas fa-search text-primary"></i>
-                        </button>
-                        <a href="{{ url('/cart') }}" class="position-relative me-4 my-auto">
-                            <i class="fa fa-shopping-bag fa-2x"></i>
-                            <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
-                        </a>
-                        <a href="{{ url('/profile') }}" class="my-auto">
-                            <i class="fas fa-user fa-2x"></i>
-                        </a>
+
+                        <!-- Tombol Aksi -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ route('cart.clear') }}" class="btn btn-outline-danger rounded-pill px-4">
+                                <i class="bi bi-x-circle"></i> Kosongkan
+                            </a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-5 fw-semibold">
+                                Checkout <i class="bi bi-arrow-right-circle ms-1"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </nav>
-        </div>
-    </div>
-    <!-- Navbar End -->
-
-    <div class="container" style="margin-top: 100px;">
-        <!-- <h2 class="mb-4">Keranjang Belanja</h2> -->
-        @if(count($items) > 0)
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Nama</th>
-                        <th>Harga</th>
-                        <th>Jumlah</th>
-                        <th>Total</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($items as $item)
-                        <tr>
-                            <td>{{ $item['name'] }}</td>
-                            <td>Rp {{ number_format($item['price'], 0, ',', '.') }}</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <button class="btn btn-sm btn-secondary btn-update me-1" data-id="{{ $item['id'] }}" data-type="decrease">−</button>
-                                    <span class="mx-2">{{ $item['quantity'] }}</span>
-                                    <button class="btn btn-sm btn-secondary btn-update ms-1" data-id="{{ $item['id'] }}" data-type="increase">+</button>
-                                </div>
-                            </td>
-                            <td>Rp {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}</td>
-                            <td>
-                                <button class="btn btn-sm btn-danger btn-remove" data-id="{{ $item['id'] }}">Hapus</button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
-            <!-- Tombol Checkout -->
-            <div class="d-flex justify-content-between">
-                <a href="{{ route('cart.clear') }}" class="btn btn-outline-danger">Kosongkan Keranjang</a>
-                <a href="{{ route('cart.checkout') }}" class="btn btn-primary">Checkout</a>  <!-- Perbaikan pada link -->
-            </div>
+            </form>
         @else
-            <p class="text-muted">Keranjang Anda masih kosong.</p>
+            <div class="alert alert-info text-center rounded-4 shadow-sm">
+                Keranjang Anda masih kosong.
+            </div>
         @endif
     </div>
-
-    <!-- Scripts -->
+    <!-- Keranjang Belanja Modern End -->
+     
+    <!-- Script -->
     <script>
-        $.ajaxSetup({
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
-        });
+        document.addEventListener('DOMContentLoaded', function () {
+            // Update jumlah
+            document.querySelectorAll('.btn-update').forEach(button => {
+                button.addEventListener('click', function () {
+                    const itemId = this.dataset.id;
+                    const type = this.dataset.type;
 
-        $(".btn-update").click(function () {
-            let id = $(this).data('id');
-            let type = $(this).data('type');
-
-            $.post("{{ route('cart.update') }}", { id, type }, function (response) {
-                if (response.success) location.reload();
+                    fetch("{{ route('cart.update') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            id: itemId,
+                            type: type
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        }
+                    });
+                });
             });
-        });
 
-        $(".btn-remove").click(function () {
-            let id = $(this).data('id');
+            // Hapus item
+            document.querySelectorAll('.btn-remove').forEach(button => {
+                button.addEventListener('click', function () {
+                    const itemId = this.dataset.id;
 
-            $.post("{{ route('cart.remove', '') }}/" + id, function (response) {
-                if (response.success) location.reload();
+                    fetch("{{ url('cart/remove') }}/" + itemId, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        }
+                    });
+                });
             });
         });
     </script>
 
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@endsection

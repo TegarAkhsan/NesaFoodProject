@@ -10,16 +10,21 @@ class StandController extends Controller
     // Halaman utama menampilkan daftar stand (dengan paginasi)
     public function index()
     {
-        $stands = Stand::with('menus')->paginate(9);
+        $stands = Stand::paginate(6);
         return view('index', compact('stands'));
     }
 
     // Menampilkan semua stand (tanpa paginasi)
     public function showStands()
     {
-        $stands = Stand::with('menus')->get();
-        return view('stand', compact('stands'));
+        $stands = Stand::paginate(6);
+
+        // dd(get_class($stands));
+        // Harus keluar: Illuminate\Pagination\LengthAwarePaginator
+
+        return view('stand.stand', compact('stands'));
     }
+
 
     // Menampilkan detail stand berdasarkan ID
     public function show($id)
@@ -30,6 +35,6 @@ class StandController extends Controller
         $drinks = $stand->menus->where('type', 'minuman')->values();
 
         // Disesuaikan dengan file view standdetail.blade.php
-        return view('standdetail', compact('stand', 'foods', 'drinks'));
+        return view('stand.standdetail', compact('stand', 'foods', 'drinks'));
     }
 }

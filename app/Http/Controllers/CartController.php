@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\Order; // Jika Anda ingin menyimpan pesanan ke database
+use App\Models\OrderItem; // Jika Anda ingin menyimpan item pesanan ke database
+use Illuminate\Support\Facades\Log; // Jika Anda ingin menggunakan log
 
 class CartController extends Controller
 {
@@ -13,6 +15,25 @@ class CartController extends Controller
     {
         $items = Session::get('cart', []);
         return view('cart.index', compact('items'));
+    }
+
+    // Menghitung total harga dari cart session
+    private function calculateTotal()
+    {
+        $cart = session('cart', []);
+        $total = 0;
+        foreach ($cart as $item) {
+            $total += $item['price'] * $item['quantity'];
+        }
+        return $total;
+    }
+    public function store(Request $request)
+    {
+        // Logika menambahkan item ke keranjang
+        $menuId = $request->menu_id;
+        // Contoh tambah ke session atau database...
+
+        return redirect()->back()->with('success', 'Menu berhasil ditambahkan ke keranjang!');
     }
 
     // API: Menambah item ke dalam cart
@@ -80,68 +101,69 @@ class CartController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function saveNote(Request $request)
+    {
+        $request->validate([
+            'catatan' => 'nullable|string|max:500'
+        ]);
+
+        session(['checkout_note' => $request->catatan]);
+
+        return redirect()->route('cart.index')->with('success', 'Catatan berhasil disimpan.');
+    }
+
     // Menampilkan halaman checkout
-    public function checkout()
+    public function checkout(Request $request)
     {
         $items = Session::get('cart', []);
         $total = 0;
-    
+
         foreach ($items as $item) {
             $total += $item['price'] * $item['quantity'];
         }
-    
-        // Kirim data keranjang dan total ke halaman checkout
-        return view('checkout', compact('items', 'total'));  // Pastikan 'items' dikirim ke view
+
+        // Simpan catatan ke session agar bisa digunakan di view checkout
+        if ($request->has('catatan')) {
+            Session::put('checkout_note', $request->input('catatan'));
+        }
+
+        return view('cart.checkout', compact('items', 'total'));
     }
+
+
 
     // Memproses checkout
     public function processCheckout(Request $request)
     {
-        // Validasi input dari form checkout
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'address' => 'required|string',
-            'payment_method' => 'required|string',
-            'note' => 'nullable|string',  // Catatan pembeli
-            'promo_code' => 'nullable|string', // Kode promo (opsional)
+        Log::info('Process checkout dipanggil');
+        // Validasi dan simpan order
+        $order = Order::create([
+            'invoice_code' => 'NSF-' . now()->format('His') . '-' . strtoupper(\Illuminate\Support\Str::random(5)),
+            'name' => $request->name,
+            'address' => $request->address,
+            'payment_method' => $request->payment_method,
+            'note' => $request->note,
+            'promo_code' => $request->promo_code,
+            'status' => 'pending',
+            'total' => $this->calculateTotal(), // fungsi hitung total kamu
         ]);
 
-        // Perhitungan total harga setelah memasukkan kode promo (jika ada)
-        $total = 0;
-        $cart = Session::get('cart', []);
-        foreach ($cart as $item) {
-            $total += $item['price'] * $item['quantity'];
+        // Simpan order items (contoh)
+        foreach(session('cart') as $item) {
+            $order->orderItems()->create([
+                'menu_id' => $item['id'],
+                'name' => $item['name'],
+                'price' => $item['price'],
+                'quantity' => $item['quantity'],
+                'subtotal' => $item['price'] * $item['quantity'],
+            ]);
         }
 
-        // Cek apakah ada kode promo yang valid
-        if ($request->promo_code) {
-            // Lakukan pengecekan kode promo di sini
-            // Misalnya, jika kode promo valid, diskon 10%
-            if ($request->promo_code === 'DISKON10') {
-                $total *= 0.9;  // Diskon 10%
-            }
-        }
+        // Hapus session cart atau sesuaikan
+        session()->forget('cart');
 
-        // Proses pemesanan dan simpan di database (opsional)
-        // Anda bisa membuat model Order atau transaksi untuk menyimpan data pesanan
-        // Contoh:
-        /*
-        Order::create([
-            'user_id' => auth()->id(),  // Jika menggunakan sistem login
-            'name' => $validated['name'],
-            'address' => $validated['address'],
-            'payment_method' => $validated['payment_method'],
-            'note' => $validated['note'],
-            'promo_code' => $validated['promo_code'],
-            'total' => $total,
-            'items' => json_encode($cart),  // Menyimpan item sebagai JSON
-        ]);
-        */
-
-        // Kosongkan keranjang setelah checkout selesai
-        Session::forget('cart');
-
-        // Redirect ke halaman order dengan pesan sukses
-        return redirect()->route('order')->with('success', 'Pemesanan berhasil!');
+        // Redirect ke halaman detail order, kirim id order
+        return redirect()->route('order.show', $order->id);
     }
+
 }
