@@ -17,6 +17,24 @@ class CartController extends Controller
         return view('cart.index', compact('items'));
     }
 
+    // API: Mengambil data keranjang
+    public function apiIndex()
+    {
+        // Ambil data cart dari session
+        $items = Session::get('cart', []);
+        $note = Session::get('checkout_note', null); // hindari fungsi helper 'session()' di luar Laravel helper route
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data keranjang berhasil diambil.',
+            'data' => [
+                'cart' => $items,
+                'note' => $note,
+                'count' => count($items)
+            ]
+        ]);
+    }
+
     // Menghitung total harga dari cart session
     private function calculateTotal()
     {

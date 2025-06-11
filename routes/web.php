@@ -36,6 +36,12 @@ Route::middleware(['web'])->prefix('cart')->name('cart.')->group(function () {
     Route::post('/save-note', [CartController::class, 'saveNote'])->name('saveNote');
 });
 
+// Route::middleware('web')->prefix('cart')->group(function () {
+//     Route::post('/add', [CartController::class, 'addToCart']);
+//     Route::get('/', [CartController::class, 'apiIndex']);
+// });
+
+
 // =============================
 // Order & Contact
 // =============================

@@ -17,6 +17,7 @@ Route::middleware('auth:api')->get('/stand/{id}', [StandController::class, 'apiS
 
 // CART API
 Route::middleware('auth:api')->prefix('cart')->group(function () {
+    Route::get('/', [CartController::class, 'apiIndex']);
     Route::post('/add', [CartController::class, 'addToCart']);
     Route::post('/update', [CartController::class, 'updateCart']);
     Route::delete('/remove/{id}', [CartController::class, 'removeFromCart']);
