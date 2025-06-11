@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\StandOwner;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Validation\Rules\Password;
 
 class AuthApiController extends Controller
 {
@@ -68,5 +69,30 @@ class AuthApiController extends Controller
         } catch (JWTException $e) {
             return response()->json(['message' => 'Gagal logout atau token tidak ditemukan'], 401);
         }
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'confirmed', Password::defaults()],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        // Generate token via Sanctum
+        $token = $user->createToken('API Token')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Registrasi berhasil',
+            'token' => $token,
+            'user' => $user
+        ]);
     }
 }

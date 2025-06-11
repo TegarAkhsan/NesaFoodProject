@@ -6,7 +6,7 @@
                 <p class="text-sm text-gray-500">Buat akun dan mulai memesan makanan favoritmu</p>
             </div>
 
-            <form method="POST" action="{{ route('register') }}">
+            <form method="POST" action="{{ url('/auth/register') }}">
                 @csrf
 
                 <!-- Name -->

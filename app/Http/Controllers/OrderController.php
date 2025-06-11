@@ -41,6 +41,18 @@ class OrderController extends Controller
         return view('orders.index', compact('orders'));
     }
 
+    // API: Menampilkan semua data order beserta item-nya
+    public function apiIndex()
+    {
+        $orders = Order::with('orderItems')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data semua order berhasil diambil.',
+            'data' => $orders
+        ]);
+    }
+
     // Tampilkan halaman detail order
     public function show($id)
     {

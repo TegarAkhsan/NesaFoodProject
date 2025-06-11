@@ -84,7 +84,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('index'); // Redirect ke halaman utama setelah signup
+        return redirect()->redirect()->route('/user/dashboard'); // Redirect ke halaman utama setelah signup
     }
     public function showProfile()
     {
