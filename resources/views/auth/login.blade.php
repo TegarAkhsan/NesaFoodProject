@@ -53,6 +53,44 @@
             </div>
         </form>
 
+        <!-- Demo Login Buttons -->
+        <div class="mt-6 border-t border-gray-100 pt-6">
+            <p class="text-xs font-bold text-center text-gray-400 uppercase tracking-wider mb-3">✨ Demo Login Cepat</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button type="button" onclick="autoLogin('stand1@example.com', 'password')"
+                        class="flex flex-col items-center justify-center p-3 rounded-xl border border-dashed border-orange-200 bg-orange-50/50 hover:bg-orange-50 transition duration-200 group">
+                    <span class="text-lg mb-1 group-hover:scale-110 transition-transform">🏪</span>
+                    <span class="text-xs font-bold text-orange-700">Stand Owner</span>
+                    <span class="text-[10px] text-orange-500">stand1@example.com</span>
+                </button>
+                <button type="button" onclick="autoLogin('pembeli@example.com', 'password')"
+                        class="flex flex-col items-center justify-center p-3 rounded-xl border border-dashed border-green-200 bg-green-50/50 hover:bg-green-50 transition duration-200 group">
+                    <span class="text-lg mb-1 group-hover:scale-110 transition-transform">🛍️</span>
+                    <span class="text-xs font-bold text-green-700">Pembeli Biasa</span>
+                    <span class="text-[10px] text-green-500">pembeli@example.com</span>
+                </button>
+            </div>
+        </div>
+
+        <script>
+            function autoLogin(email, password) {
+                const emailInput = document.getElementById('email');
+                const passwordInput = document.getElementById('password');
+                if (emailInput && passwordInput) {
+                    emailInput.value = email;
+                    passwordInput.value = password;
+                    
+                    // Efek visual highlight pada input field
+                    emailInput.classList.add('bg-yellow-50');
+                    passwordInput.classList.add('bg-yellow-50');
+                    
+                    setTimeout(() => {
+                        emailInput.form.submit();
+                    }, 350);
+                }
+            }
+        </script>
+
         <p class="mt-6 text-sm text-center text-gray-500">
             Belum punya akun?
             <a href="{{ route('register') }}" class="text-orange-600 hover:underline font-medium">Daftar sekarang</a>

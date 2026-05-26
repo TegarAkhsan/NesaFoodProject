@@ -12,7 +12,10 @@ class Order extends Model
     protected $fillable = [
         'invoice_code',
         'name',
+        'customer_name',
         'address',
+        'delivery_type',
+        'delivery_fee',
         'payment_method',
         'note',
         'promo_code',

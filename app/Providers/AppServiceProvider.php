@@ -24,7 +24,15 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer('*', function ($view) {
-            $view->with('stands', Stand::all());
+            try {
+                if (\Illuminate\Support\Facades\Schema::hasTable('stands')) {
+                    $view->with('stands', Stand::all());
+                } else {
+                    $view->with('stands', collect());
+                }
+            } catch (\Exception $e) {
+                $view->with('stands', collect());
+            }
         });
     }
 }

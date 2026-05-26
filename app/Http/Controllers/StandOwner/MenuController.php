@@ -19,7 +19,7 @@ class MenuController extends Controller
     public function index()
     {
         // Dapatkan id stand milik standowner yang login
-        $standId = Auth::user()->stand->id ?? null;
+        $standId = Auth::guard('standowner')->id();
 
         if (!$standId) {
             // Kalau tidak punya stand, return view dengan array kosong
@@ -56,7 +56,7 @@ class MenuController extends Controller
             'description' => 'nullable|string|max:1000',
         ]);
 
-        $standId = Auth::user()->stand->id ?? null;
+        $standId = Auth::guard('standowner')->id();
 
         if (!$standId) {
             return redirect()->back()->with('error', 'Stand tidak ditemukan untuk user ini.');
@@ -85,7 +85,7 @@ class MenuController extends Controller
      */
     public function edit(Menu $menu)
     {
-        $standId = Auth::user()->stand->id ?? null;
+        $standId = Auth::guard('standowner')->id();
 
         // Pastikan menu yang diedit milik stand owner
         if ($menu->stand_id !== $standId) {
@@ -103,7 +103,7 @@ class MenuController extends Controller
      */
     public function update(Request $request, Menu $menu)
     {
-        $standId = Auth::user()->stand->id ?? null;
+        $standId = Auth::guard('standowner')->id();
 
         // Pastikan menu yang diupdate milik stand owner
         if ($menu->stand_id !== $standId) {
@@ -137,7 +137,7 @@ class MenuController extends Controller
      */
     public function destroy(Menu $menu)
     {
-        $standId = Auth::user()->stand->id ?? null;
+        $standId = Auth::guard('standowner')->id();
 
         // Pastikan menu yang dihapus milik stand owner
         if ($menu->stand_id !== $standId) {

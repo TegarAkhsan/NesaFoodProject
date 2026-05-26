@@ -21,10 +21,26 @@ class StandController extends Controller
         return view('stand.stand', compact('stands'));
     }
 
-    // Menampilkan detail stand berdasarkan ID (view)
-    public function show($id)
+    // Menampilkan detail stand berdasarkan ID atau Slug (view)
+    public function show($idOrSlug)
     {
-        $stand = Stand::with('menus')->findOrFail($id);
+        if (is_numeric($idOrSlug)) {
+            $stand = Stand::with('menus')->find($idOrSlug);
+        } else {
+            $stand = null;
+        }
+
+        if (!$stand) {
+            $stands = Stand::with('menus')->get();
+            $stand = $stands->first(function ($item) use ($idOrSlug) {
+                return \Illuminate\Support\Str::slug($item->name) === $idOrSlug;
+            });
+        }
+
+        if (!$stand) {
+            abort(404);
+        }
+
         $foods = $stand->menus->where('type', 'makanan')->values();
         $drinks = $stand->menus->where('type', 'minuman')->values();
 
@@ -32,9 +48,25 @@ class StandController extends Controller
     }
 
     // Menampilkan detail stand sebagai JSON (API)
-    public function apiShow($id)
+    public function apiShow($idOrSlug)
     {
-        $stand = Stand::with('menus')->findOrFail($id);
+        if (is_numeric($idOrSlug)) {
+            $stand = Stand::with('menus')->find($idOrSlug);
+        } else {
+            $stand = null;
+        }
+
+        if (!$stand) {
+            $stands = Stand::with('menus')->get();
+            $stand = $stands->first(function ($item) use ($idOrSlug) {
+                return \Illuminate\Support\Str::slug($item->name) === $idOrSlug;
+            });
+        }
+
+        if (!$stand) {
+            return response()->json(['error' => 'Stand not found'], 404);
+        }
+
         return response()->json([
             'id' => $stand->id,
             'name' => $stand->name,

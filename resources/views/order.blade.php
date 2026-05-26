@@ -1,3 +1,10 @@
+@php
+    $cart = session('cart', []);
+    $cartCount = 0;
+    foreach ($cart as $item) {
+        $cartCount += $item['quantity'];
+    }
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,9 +48,9 @@
                                 Stand Detail
                             </a>
                             <div class="dropdown-menu" aria-labelledby="standDetailDropdown" style="max-height: 300px; overflow-y: auto;">
-                                @for($i = 1; $i <= 20; $i++)
-                                    <a class="dropdown-item" href="{{ route('stand.show', $i) }}">Stand {{ $i }}</a>
-                                @endfor
+                                @foreach($stands as $stand)
+                                    <a class="dropdown-item" href="{{ route('stand.show', $stand->slug) }}">{{ $stand->name }}</a>
+                                @endforeach
                             </div>
                         </div>
 
@@ -51,12 +58,18 @@
                     </div>
 
                     <div class="d-flex m-3 me-0">
-                        <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal">
-                            <i class="fas fa-search text-primary"></i>
-                        </button>
-                        <a href="{{ url('/cart') }}" class="position-relative me-4 my-auto">
-                            <i class="fa fa-shopping-bag fa-2x"></i>
-                            <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                        <a href="{{ url('/cart') }}" class="position-relative me-4 my-auto text-decoration-none">
+                            <i class="fa fa-shopping-bag fa-2x text-primary"></i>
+                            @if($cartCount > 0)
+                                <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1 cart-count"
+                                    style="top: -5px; left: 15px; height: 20px; min-width: 20px; font-size: 0.75rem; font-weight: 700;">
+                                    {{ $cartCount }}
+                                </span>
+                            @else
+                                <span class="position-absolute bg-secondary rounded-circle d-none align-items-center justify-content-center text-dark px-1 cart-count"
+                                    style="top: -5px; left: 15px; height: 20px; min-width: 20px; font-size: 0.75rem; font-weight: 700;">
+                                </span>
+                            @endif
                         </a>
                         <a href="{{ url('/profile') }}" class="my-auto">
                             <i class="fas fa-user fa-2x"></i>

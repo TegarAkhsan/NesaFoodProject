@@ -13,5 +13,14 @@ class DatabaseSeeder extends Seeder
             MenuSeeder::class,
             StandOwnerSeeder::class,
         ]);
+
+        // Tambah Pembeli Demo agar otomatis ada saat seeder dijalankan
+        \App\Models\User::firstOrCreate(
+            ['email' => 'pembeli@example.com'],
+            [
+                'name' => 'Pembeli Demo',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            ]
+        );
     }
 }

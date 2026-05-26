@@ -60,23 +60,31 @@ class CartController extends Controller
     {
         $cart = Session::get('cart', []);
         $itemIndex = array_search($request->id, array_column($cart, 'id'));
+        $qtyToAdd = intval($request->input('quantity', 1));
 
         if ($itemIndex !== false) {
-            $cart[$itemIndex]['quantity'] += 1;
+            $cart[$itemIndex]['quantity'] += $qtyToAdd;
         } else {
             $cart[] = [
                 'id' => $request->id,
                 'name' => $request->name,
                 'price' => $request->price,
-                'quantity' => 1
+                'quantity' => $qtyToAdd
             ];
         }
 
         Session::put('cart', $cart);
 
+        // Hitung total items di keranjang
+        $cartCount = 0;
+        foreach ($cart as $item) {
+            $cartCount += $item['quantity'];
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Item berhasil ditambahkan ke keranjang!',
+            'cartCount' => $cartCount,
             'data' => ['cart' => $cart]
         ]);
     }
@@ -203,33 +211,77 @@ class CartController extends Controller
     public function processCheckout(Request $request)
     {
         Log::info('Process checkout dipanggil');
-        // Validasi dan simpan order
-        $order = Order::create([
-            'invoice_code' => 'NSF-' . now()->format('His') . '-' . strtoupper(\Illuminate\Support\Str::random(5)),
-            'name' => $request->name,
-            'address' => $request->address,
-            'payment_method' => $request->payment_method,
-            'note' => $request->note,
-            'promo_code' => $request->promo_code,
-            'status' => 'pending',
-            'total' => $this->calculateTotal(), // fungsi hitung total kamu
+
+        // Validasi input
+        $request->validate([
+            'name'           => 'required|string|max:255',
+            'address'        => 'required|string',
+            'delivery_type'  => 'required|in:diantar,diambil',
+            'payment_method' => 'required|in:transfer,cod,ewallet',
+            'note'           => 'nullable|string|max:500',
+            'promo_code'     => 'nullable|string|max:50',
         ]);
 
-        // Simpan order items (contoh)
-        foreach(session('cart') as $item) {
+        // Validasi: jika diambil, tidak boleh COD
+        if ($request->delivery_type === 'diambil' && $request->payment_method === 'cod') {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Jika memilih "Diambil Sendiri", pembayaran harus dilakukan terlebih dahulu (Transfer Bank atau E-Wallet). COD tidak tersedia untuk opsi ini.');
+        }
+
+        // Hitung subtotal
+        $cart = session('cart', []);
+        if (empty($cart)) {
+            return redirect()->back()->with('error', 'Keranjang belanja kosong.');
+        }
+
+        $subtotal = 0;
+        foreach ($cart as $item) {
+            $subtotal += $item['price'] * $item['quantity'];
+        }
+
+        // Biaya pengiriman
+        $deliveryFee = ($request->delivery_type === 'diantar') ? 5000 : 0;
+
+        // Promo diskon
+        $promoCode = $request->promo_code;
+        $discount  = 0;
+        if ($promoCode === 'DISKON10') {
+            $discount = $subtotal * 0.10;
+        }
+
+        $finalTotal = ($subtotal - $discount) + $deliveryFee;
+
+        // Simpan order
+        $order = Order::create([
+            'invoice_code'   => 'NSF-' . now()->format('His') . '-' . strtoupper(\Illuminate\Support\Str::random(5)),
+            'customer_name'  => $request->name,
+            'name'           => $request->name,
+            'address'        => $request->address,
+            'delivery_type'  => $request->delivery_type,
+            'delivery_fee'   => $deliveryFee,
+            'payment_method' => $request->payment_method,
+            'note'           => $request->note,
+            'promo_code'     => $promoCode,
+            'status'         => 'pending',
+            'total'          => $finalTotal,
+        ]);
+
+        // Simpan order items
+        foreach ($cart as $item) {
             $order->orderItems()->create([
-                'menu_id' => $item['id'],
-                'name' => $item['name'],
-                'price' => $item['price'],
+                'menu_id'  => $item['id'],
+                'name'     => $item['name'],
+                'price'    => $item['price'],
                 'quantity' => $item['quantity'],
                 'subtotal' => $item['price'] * $item['quantity'],
             ]);
         }
 
-        // Hapus session cart atau sesuaikan
+        // Hapus session cart
         session()->forget('cart');
 
-        // Redirect ke halaman detail order, kirim id order
+        // Redirect ke halaman detail order
         return redirect()->route('order.show', $order->id);
     }
 

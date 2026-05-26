@@ -52,6 +52,9 @@ Route::post('/contact', [ContactController::class, 'store'])->name('contact.stor
 // Halaman Statis
 // =============================
 Route::view('/aboutus', 'aboutus')->name('aboutus');
+Route::view('/contact', 'contact')->name('contact');
+Route::view('/terms', 'terms')->name('terms');
+Route::view('/faq', 'faq')->name('faq');
 Route::view('/order', 'order')->name('order');
 Route::view('/orderdetail', 'orderdetail')->name('orderdetail');
 Route::view('/orderhistory', 'orderhistory')->name('orderhistory');

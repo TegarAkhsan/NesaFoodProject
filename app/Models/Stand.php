@@ -8,6 +8,11 @@ class Stand extends Model
 {
     protected $fillable = ['name', 'location', 'description'];
 
+    public function getSlugAttribute()
+    {
+        return \Illuminate\Support\Str::slug($this->name);
+    }
+
     public function menus()
     {
         return $this->hasMany(Menu::class, 'stand_id', 'id');

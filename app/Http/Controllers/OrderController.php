@@ -58,8 +58,11 @@ class OrderController extends Controller
     {
         $order = Order::with('orderItems.menu')->findOrFail($id);
 
-        // Generate QR dari invoice_code
-        $qrCode = QrCode::size(200)->generate($order->invoice_code);
+        // Generate QR hanya untuk metode selain COD
+        $qrCode = null;
+        if ($order->payment_method !== 'cod') {
+            $qrCode = QrCode::size(200)->generate($order->invoice_code);
+        }
 
         return view('order.show', compact('order', 'qrCode'));
     }
@@ -75,63 +78,74 @@ class OrderController extends Controller
     public function processCheckout(Request $request)
     {
         Log::info('Process checkout dipanggil');
+
         $request->validate([
-            'invoice_code' => 'required|string|max:255|unique:orders,invoice_code',
-            'name' => 'required|string|max:255',
-            'address' => 'required|string',
+            'name'           => 'required|string|max:255',
+            'address'        => 'required|string',
+            'delivery_type'  => 'required|in:diantar,diambil',
             'payment_method' => 'required|in:transfer,cod,ewallet',
-            'note' => 'nullable|string|max:500',
-            'promo_code' => 'nullable|string|max:50',
-            'status' => 'in:pending,completed,cancelled',
-            'total' => 'required|numeric|min:0',
+            'note'           => 'nullable|string|max:500',
+            'promo_code'     => 'nullable|string|max:50',
         ]);
 
-        // Ambil data keranjang dari session (atau cara kamu menyimpan cart)
+        // Validasi: jika diambil, tidak boleh COD — harus bayar dulu (transfer/ewallet)
+        if ($request->delivery_type === 'diambil' && $request->payment_method === 'cod') {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Jika memilih "Diambil Sendiri", pembayaran harus dilakukan terlebih dahulu (Transfer Bank atau E-Wallet). COD tidak tersedia untuk pilihan ini.');
+        }
+
+        // Ambil data keranjang dari session
         $cartItems = session('cart', []);
 
         if (empty($cartItems)) {
             return redirect()->back()->with('error', 'Keranjang belanja kosong.');
         }
 
-        // Hitung total harga sebelum promo
-        $totalPrice = 0;
+        // Hitung subtotal item
+        $subtotal = 0;
         foreach ($cartItems as $item) {
-            $totalPrice += $item['price'] * $item['quantity'];
+            $subtotal += $item['price'] * $item['quantity'];
         }
 
-        // Terapkan promo jika ada (contoh promo DISKON10 = diskon 10%)
+        // Biaya pengiriman (ongkir)
+        $deliveryFee = ($request->delivery_type === 'diantar') ? 5000 : 0;
+
+        // Terapkan promo jika ada
         $promoCode = $request->promo_code;
-        $discount = 0;
+        $discount  = 0;
         if ($promoCode === 'DISKON10') {
-            $discount = $totalPrice * 0.10;
+            $discount = $subtotal * 0.10;
         }
-        $finalTotal = $totalPrice - $discount;
+
+        // Total akhir = subtotal - diskon + ongkir
+        $finalTotal = ($subtotal - $discount) + $deliveryFee;
 
         DB::beginTransaction();
 
         try {
-            // Generate kode invoice unik
             $invoiceCode = 'NSF-' . now()->format('His') . '-' . strtoupper(Str::random(5));
 
-            // Simpan order
             $order = Order::create([
-                'invoice_code' => $invoiceCode,
-                'customer_name' => $request->name,
-                'address' => $request->address,
+                'invoice_code'   => $invoiceCode,
+                'customer_name'  => $request->name,
+                'name'           => $request->name,
+                'address'        => $request->address,
+                'delivery_type'  => $request->delivery_type,
+                'delivery_fee'   => $deliveryFee,
                 'payment_method' => $request->payment_method,
-                'note' => $request->note,
-                'promo_code' => $promoCode,
-                'status' => 'pending',
-                'total' => $finalTotal,
+                'note'           => $request->note,
+                'promo_code'     => $promoCode,
+                'status'         => 'pending',
+                'total'          => $finalTotal,
             ]);
 
-            // Simpan detail order_items
             foreach ($cartItems as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'menu_id' => $item['id'],
-                    'name' => $item['name'],          // Pastikan kolom 'name' ada di order_items tabel
-                    'price' => $item['price'],
+                    'menu_id'  => $item['id'],
+                    'name'     => $item['name'],
+                    'price'    => $item['price'],
                     'quantity' => $item['quantity'],
                     'subtotal' => $item['price'] * $item['quantity'],
                 ]);
@@ -139,10 +153,8 @@ class OrderController extends Controller
 
             DB::commit();
 
-            // Bersihkan session cart setelah checkout berhasil
             session()->forget('cart');
 
-            // Redirect ke halaman detail order atau sukses checkout
             return redirect()->route('order.show', $order->id)->with('success', 'Checkout berhasil!');
 
         } catch (\Exception $e) {
