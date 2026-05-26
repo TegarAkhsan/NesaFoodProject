@@ -155,7 +155,7 @@
                             <td>
                                 @if($menu->gambar)
                                     <img src="{{ asset('storage/' . $menu->gambar) }}"
-                                         alt="{{ $menu->nama }}" class="so-menu-img">
+                                         alt="{{ $menu->nama }}" class="so-menu-img" onerror="this.onerror=null; this.outerHTML='<div class=&quot;so-menu-no-img&quot;>🍴</div>';">
                                 @else
                                     <div class="so-menu-no-img">🍴</div>
                                 @endif

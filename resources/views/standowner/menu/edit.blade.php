@@ -170,10 +170,9 @@
                         <div style="grid-column:1/-1;">
                             <label class="so-label"><i class="bi bi-image"></i> Foto Menu <span style="font-weight:400;color:#bbb;">(opsional — kosongkan jika tidak diubah)</span></label>
 
-                            {{-- Current Image Preview --}}
                             @if($menu->gambar)
-                            <div class="current-img-box">
-                                <img src="{{ asset('storage/' . $menu->gambar) }}" alt="{{ $menu->nama }}">
+                            <div class="current-img-box" id="current-img-container">
+                                <img src="{{ asset('storage/' . $menu->gambar) }}" alt="{{ $menu->nama }}" onerror="document.getElementById('current-img-container').style.display='none';">
                                 <span>Foto saat ini. Upload baru untuk mengganti.</span>
                             </div>
                             @endif

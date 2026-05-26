@@ -132,7 +132,6 @@
     padding: 28px 32px;
     min-height: 100vh; /* full viewport height */
 }
-}
 
 /* ---- Page Header ---- */
 .so-page-header {
@@ -140,8 +139,15 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 28px;
-    flex-wrap: wrap;
-    gap: 12px;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .so-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
 }
 
 .so-page-title {
@@ -747,7 +753,7 @@
                                 <td>
                                     <div style="display:flex;align-items:center;gap:10px;">
                                         @if($menu->image ?? $menu->gambar)
-                                            <img src="{{ asset('storage/' . ($menu->image ?? $menu->gambar)) }}" class="so-menu-img" alt="">
+                                            <img src="{{ asset('storage/' . ($menu->image ?? $menu->gambar)) }}" class="so-menu-img" alt="" onerror="this.onerror=null; this.outerHTML='<div class=&quot;so-menu-no-img&quot;>🍴</div>';">
                                         @else
                                             <div class="so-menu-no-img">🍴</div>
                                         @endif
