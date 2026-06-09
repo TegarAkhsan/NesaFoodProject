@@ -82,7 +82,13 @@
         function addToCart(product) {
             cart.push(product);
             localStorage.setItem('cart', JSON.stringify(cart));
-            alert('Product added to cart');
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: 'Product added to cart',
+                timer: 1500,
+                showConfirmButton: false
+            });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -123,5 +129,6 @@
 
 
     <!-- Script JS Bootstrap, FontAwesome, dll -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

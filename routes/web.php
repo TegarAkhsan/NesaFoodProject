@@ -72,7 +72,16 @@ Route::post('/auth/logout', [UnifiedLoginController::class, 'logout'])->name('au
 // User Dashboard
 // =============================
 Route::get('/user/dashboard', function () {
-    return view('user.dashboard');
+    $user = \Illuminate\Support\Facades\Auth::user();
+    $orders = \App\Models\Order::where('name', $user->name)
+                ->orderBy('created_at', 'desc')
+                ->get();
+    
+    $totalPemesanan = $orders->count();
+    $pesananAktif = $orders->whereNotIn('status', ['Selesai', 'Dibatalkan', 'completed', 'cancelled'])->count();
+    $recentOrders = $orders->take(5);
+
+    return view('user.dashboard', compact('user', 'totalPemesanan', 'pesananAktif', 'recentOrders'));
 })->middleware('auth')->name('user.dashboard');
 
 // =============================

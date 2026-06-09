@@ -372,7 +372,7 @@
                                 <div class="summary-card summary-card-primary d-flex align-items-center justify-content-between">
                                     <div>
                                         <h6 class="text-muted mb-1" style="font-size: 0.85rem; font-weight:600;">Total Pemesanan</h6>
-                                        <h2 class="fw-bold mb-0 text-dark" style="font-size: 2.2rem;">12</h2>
+                                        <h2 class="fw-bold mb-0 text-dark" style="font-size: 2.2rem;">{{ $totalPemesanan ?? 0 }}</h2>
                                     </div>
                                     <div class="icon-circle icon-circle-primary">
                                         <i class="fas fa-shopping-bag"></i>
@@ -383,7 +383,7 @@
                                 <div class="summary-card summary-card-warning d-flex align-items-center justify-content-between">
                                     <div>
                                         <h6 class="text-muted mb-1" style="font-size: 0.85rem; font-weight:600;">Pesanan Aktif</h6>
-                                        <h2 class="fw-bold mb-0 text-dark" style="font-size: 2.2rem;">2</h2>
+                                        <h2 class="fw-bold mb-0 text-dark" style="font-size: 2.2rem;">{{ $pesananAktif ?? 0 }}</h2>
                                     </div>
                                     <div class="icon-circle icon-circle-warning">
                                         <i class="fas fa-utensils"></i>
@@ -419,26 +419,30 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @forelse($recentOrders as $order)
                                     <tr>
-                                        <td class="fw-bold text-primary">INV-0012</td>
+                                        <td class="fw-bold text-primary">{{ $order->invoice_code }}</td>
                                         <td>
-                                            <div class="fw-bold">Ayam Bakar + Es Teh</div>
-                                            <span class="text-muted" style="font-size: 0.8rem;">Dapur Nusantara</span>
+                                            @foreach($order->orderItems as $item)
+                                                <div class="fw-bold">{{ $item->name }} (x{{ $item->quantity }})</div>
+                                            @endforeach
+                                            <span class="text-muted" style="font-size: 0.8rem;">Pemesanan Standar</span>
                                         </td>
-                                        <td class="text-muted">10 Juni 2025</td>
-                                        <td class="fw-bold text-dark">Rp 28.000</td>
-                                        <td><span class="badge-status badge-status-completed">Selesai</span></td>
+                                        <td class="text-muted">{{ $order->created_at->format('d M Y') }}</td>
+                                        <td class="fw-bold text-dark">Rp {{ number_format($order->total, 0, ',', '.') }}</td>
+                                        <td>
+                                            @if(in_array(strtolower($order->status), ['selesai', 'completed']))
+                                                <span class="badge-status badge-status-completed">Selesai</span>
+                                            @else
+                                                <span class="badge-status badge-status-pending">{{ ucfirst($order->status) }}</span>
+                                            @endif
+                                        </td>
                                     </tr>
+                                    @empty
                                     <tr>
-                                        <td class="fw-bold text-primary">INV-0013</td>
-                                        <td>
-                                            <div class="fw-bold">Nasi Goreng Spesial</div>
-                                            <span class="text-muted" style="font-size: 0.8rem;">Warung Laris</span>
-                                        </td>
-                                        <td class="text-muted">11 Juni 2025</td>
-                                        <td class="fw-bold text-dark">Rp 22.000</td>
-                                        <td><span class="badge-status badge-status-pending">Diproses</span></td>
+                                        <td colspan="5" class="text-center py-4 text-muted">Belum ada pemesanan terbaru.</td>
                                     </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>

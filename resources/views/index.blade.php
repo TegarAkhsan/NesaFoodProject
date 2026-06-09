@@ -613,8 +613,14 @@
             e.preventDefault();
 
             if (!isLoggedIn) {
-                alert("Silakan login terlebih dahulu untuk menambahkan ke keranjang.");
-                window.location.href = "/auth/login";
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Perhatian',
+                    text: 'Silakan login terlebih dahulu untuk menambahkan ke keranjang.',
+                    confirmButtonColor: '#81c408'
+                }).then(() => {
+                    window.location.href = "/auth/login";
+                });
                 return;
             }
 
@@ -634,11 +640,21 @@
                     image: menuImage
                 },
                 success: function (response) {
-                    alert(response.message);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: response.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
                     $('.cart-count').text(response.cartCount).removeClass('d-none').addClass('d-flex');
                 },
                 error: function (xhr) {
-                    alert("Gagal menambahkan ke keranjang.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Gagal menambahkan ke keranjang.'
+                    });
                 }
             });
         });

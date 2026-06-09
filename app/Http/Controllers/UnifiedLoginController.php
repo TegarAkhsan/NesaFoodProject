@@ -39,7 +39,10 @@ class UnifiedLoginController extends Controller
         } 
         else {
             // Coba login sebagai pembeli biasa
-            if (Auth::guard('web')->attempt($credentials)) {
+            $attemptResult = Auth::guard('web')->attempt($credentials);
+            Log::info('Login pembeli biasa', ['credentials' => $credentials, 'result' => $attemptResult]);
+
+            if ($attemptResult) {
                 $request->session()->regenerate();
                 return redirect()->route('user.dashboard');
             } else {
